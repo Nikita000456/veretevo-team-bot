@@ -284,6 +284,275 @@ class ContactsHandler:
             reply_markup=contact_categories_keyboard(),
             parse_mode=ParseMode.HTML
         )
+    
+    # Добавляем недостающие методы для ConversationHandler
+    async def handle_contact_name_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода названия контакта"""
+        try:
+            name = update.message.text.strip()
+            if len(name) < 2:
+                await update.message.reply_text(
+                    "❌ Название должно содержать минимум 2 символа. Попробуйте еще раз:",
+                    reply_markup=contact_creation_keyboard()
+                )
+                return ADDING_CONTACT_NAME
+            
+            # Сохраняем название
+            context.user_data['contact_creation']['name'] = name
+            
+            await update.message.reply_text(
+                "📱 Теперь введите номер телефона:",
+                reply_markup=contact_creation_keyboard()
+            )
+            return ADDING_CONTACT_PHONE
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки названия контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_phone_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода телефона контакта"""
+        try:
+            phone = update.message.text.strip()
+            # Простая валидация телефона
+            if not (phone.startswith('+7') or phone.startswith('8')) or len(phone) < 10:
+                await update.message.reply_text(
+                    "❌ Неверный формат телефона. Используйте формат +7 (999) 123-45-67 или 8 (999) 123-45-67. Попробуйте еще раз:",
+                    reply_markup=contact_creation_keyboard()
+                )
+                return ADDING_CONTACT_PHONE
+            
+            # Сохраняем телефон
+            context.user_data['contact_creation']['phone'] = phone
+            
+            await update.message.reply_text(
+                "📧 Введите email (или '-' чтобы пропустить):",
+                reply_markup=contact_creation_keyboard()
+            )
+            return ADDING_CONTACT_EMAIL
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки телефона контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_email_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода email контакта"""
+        try:
+            email = update.message.text.strip()
+            if email == '-':
+                email = ''
+            elif '@' not in email:
+                await update.message.reply_text(
+                    "❌ Неверный формат email. Попробуйте еще раз или введите '-' чтобы пропустить:",
+                    reply_markup=contact_creation_keyboard()
+                )
+                return ADDING_CONTACT_EMAIL
+            
+            # Сохраняем email
+            context.user_data['contact_creation']['email'] = email
+            
+            await update.message.reply_text(
+                "📍 Введите адрес (или '-' чтобы пропустить):",
+                reply_markup=contact_creation_keyboard()
+            )
+            return ADDING_CONTACT_ADDRESS
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки email контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_address_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода адреса контакта"""
+        try:
+            address = update.message.text.strip()
+            if address == '-':
+                address = ''
+            
+            # Сохраняем адрес
+            context.user_data['contact_creation']['address'] = address
+            
+            await update.message.reply_text(
+                "🌐 Введите веб-сайт (или '-' чтобы пропустить):",
+                reply_markup=contact_creation_keyboard()
+            )
+            return ADDING_CONTACT_WEBSITE
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки адреса контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_website_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода веб-сайта контакта"""
+        try:
+            website = update.message.text.strip()
+            if website == '-':
+                website = ''
+            elif website and not website.startswith(('http://', 'https://', 'www.')):
+                website = 'www.' + website
+            
+            # Сохраняем веб-сайт
+            context.user_data['contact_creation']['website'] = website
+            
+            await update.message.reply_text(
+                "📝 Введите описание (или '-' чтобы пропустить):",
+                reply_markup=contact_creation_keyboard()
+            )
+            return ADDING_CONTACT_DESCRIPTION
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки веб-сайта контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_description_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка ввода описания контакта"""
+        try:
+            description = update.message.text.strip()
+            if description == '-':
+                description = ''
+            
+            # Сохраняем описание
+            context.user_data['contact_creation']['description'] = description
+            
+            # Показываем выбор категории
+            await update.message.reply_text(
+                "🏷️ Выберите категорию контакта:",
+                reply_markup=contact_categories_keyboard()
+            )
+            return ADDING_CONTACT_CATEGORY
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки описания контакта: {e}")
+            await update.message.reply_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_category_selection(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка выбора категории контакта"""
+        try:
+            query = update.callback_query
+            await query.answer()
+            
+            if query.data.startswith('category_'):
+                category = query.data.replace('category_', '')
+                context.user_data['contact_creation']['category'] = category
+                
+                # Сохраняем контакт
+                contact_data = context.user_data['contact_creation']
+                success = self.knowledge_collector.save_supplier_contact(contact_data)
+                
+                if success:
+                    await query.edit_message_text(
+                        f"✅ Контакт успешно добавлен!\n\n"
+                        f"🏢 Название: {contact_data['name']}\n"
+                        f"📱 Телефон: {contact_data['phone']}\n"
+                        f"🏷️ Категория: {category}",
+                        reply_markup=contacts_menu_keyboard()
+                    )
+                    
+                    # Отправляем уведомление
+                    notification = f"📞 НОВЫЙ КОНТАКТ ДОБАВЛЕН\n\n🏢 {contact_data['name']}\n📱 {contact_data['phone']}\n🏷️ {category}"
+                    await self._send_notification_to_veretevo_info(notification, context)
+                    
+                    # Очищаем данные
+                    context.user_data.pop('contact_creation', None)
+                    return ConversationHandler.END
+                else:
+                    await query.edit_message_text(
+                        "❌ Ошибка при сохранении контакта. Попробуйте еще раз.",
+                        reply_markup=contacts_menu_keyboard()
+                    )
+                    return ConversationHandler.END
+            else:
+                await query.edit_message_text(
+                    "❌ Неверная категория. Попробуйте еще раз.",
+                    reply_markup=contact_categories_keyboard()
+                )
+                return ADDING_CONTACT_CATEGORY
+                
+        except Exception as e:
+            logger.error(f"❌ Ошибка обработки выбора категории: {e}")
+            await query.edit_message_text("❌ Произошла ошибка. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def handle_contact_search_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка поиска контактов"""
+        try:
+            query_text = update.message.text.strip()
+            if len(query_text) < 2:
+                await update.message.reply_text(
+                    "❌ Поисковый запрос должен содержать минимум 2 символа. Попробуйте еще раз:",
+                    reply_markup=contacts_menu_keyboard()
+                )
+                return SEARCHING_CONTACT
+            
+            # Ищем контакты
+            results = self.knowledge_collector.search_contacts_advanced(query_text)
+            
+            if results:
+                # Показываем результаты
+                result_text = f"🔍 Результаты поиска по запросу '{query_text}':\n\n"
+                for i, contact in enumerate(results[:10], 1):
+                    result_text += f"{i}. {contact.get('name', 'N/A')}\n"
+                    result_text += f"   📱 {contact.get('phone', 'N/A')}\n"
+                    result_text += f"   📧 {contact.get('email', 'N/A')}\n"
+                    result_text += f"   🏷️ {contact.get('category', 'N/A')}\n\n"
+                
+                await update.message.reply_text(
+                    result_text,
+                    reply_markup=contacts_menu_keyboard()
+                )
+            else:
+                await update.message.reply_text(
+                    f"🔍 По запросу '{query_text}' ничего не найдено.\n\n"
+                    f"💡 Попробуйте изменить поисковый запрос или добавить новый контакт.",
+                    reply_markup=contacts_menu_keyboard()
+                )
+            
+            return ConversationHandler.END
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка поиска контактов: {e}")
+            await update.message.reply_text("❌ Произошла ошибка при поиске. Попробуйте еще раз.")
+            return ConversationHandler.END
+    
+    async def cancel_contact_operation(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Отмена операции с контактом"""
+        try:
+            # Очищаем данные
+            context.user_data.pop('contact_creation', None)
+            
+            await update.message.reply_text(
+                "❌ Операция отменена.",
+                reply_markup=contacts_menu_keyboard()
+            )
+            return ConversationHandler.END
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка отмены операции: {e}")
+            return ConversationHandler.END
+    
+    async def handle_contact_cancel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        """Обработка кнопки отмены"""
+        try:
+            query = update.callback_query
+            await query.answer()
+            
+            # Очищаем данные
+            context.user_data.pop('contact_creation', None)
+            
+            await query.edit_message_text(
+                "❌ Операция отменена.",
+                reply_markup=contacts_menu_keyboard()
+            )
+            return ConversationHandler.END
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка отмены операции: {e}")
+            return ConversationHandler.END
 
 def register_contacts_handlers(application: Application) -> None:
     """Регистрация обработчиков команд по контактам"""

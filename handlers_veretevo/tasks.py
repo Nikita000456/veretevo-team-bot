@@ -922,7 +922,7 @@ async def handle_voice_message(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """
-    Обрабатывает текстовые команды пользователя из главного меню (создание задачи, список задач).
+    Обрабатывает текстовые команды пользователя из главного меню (создание задачи, список задач, контакты).
     Работает только в личных чатах и только с командами меню.
 
     Args:
@@ -933,7 +933,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     
     # Проверяем, что это команды меню
-    if text in ["📌 Новая задача", "📋 Список задач", "Мои задачи"]:
+    if text in ["📌 Новая задача", "📋 Список задач", "Мои задачи", "📞 Контакты"]:
         # Обрабатываем команды только в личных чатах
         if text == "📌 Новая задача":
             return await new_task_start(update, context)
@@ -941,6 +941,11 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return await list_tasks(update, context)
         elif text == "Мои задачи":
             return await view_personal_tasks(update, context)
+        elif text == "📞 Контакты":
+            # Импортируем обработчик контактов
+            from handlers_veretevo.contacts import ContactsHandler
+            contacts_handler = ContactsHandler()
+            return await contacts_handler.contacts_button_handler(update, context)
     
     # Если это не команда меню, не обрабатываем
     logging.debug(f"handle_text: пропускаем сообщение '{text}' - не является командой меню")
