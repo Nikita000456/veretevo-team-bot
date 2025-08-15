@@ -1,0 +1,100 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/testbot/VeretevoTeam
+plugins: anyio-4.9.0
+collecting ... collected 15 items
+
+tests/test_all_handlers.py::test_new_task_start_single_department SKIPPED [  6%]
+tests/test_all_handlers.py::test_new_task_start_multiple_departments SKIPPED [ 13%]
+tests/test_all_handlers.py::test_new_task_start_no_departments SKIPPED   [ 20%]
+tests/test_all_handlers.py::test_receive_task_text_cancel SKIPPED (a...) [ 26%]
+tests/test_all_handlers.py::test_receive_task_text_normal SKIPPED (a...) [ 33%]
+tests/test_all_handlers.py::test_assign_type_callback_assign_none SKIPPED [ 40%]
+tests/test_all_handlers.py::test_assign_type_callback_cancel SKIPPED     [ 46%]
+tests/test_all_handlers.py::test_assign_department_success SKIPPED (...) [ 53%]
+tests/test_all_handlers.py::test_assign_department_invalid_user SKIPPED  [ 60%]
+tests/test_all_handlers.py::test_assign_assistant_success SKIPPED (a...) [ 66%]
+tests/test_all_handlers.py::test_cancel_task_callback SKIPPED (async...) [ 73%]
+tests/test_all_handlers.py::test_list_tasks SKIPPED (async def funct...) [ 80%]
+tests/test_all_handlers.py::test_view_personal_tasks SKIPPED (async ...) [ 86%]
+tests/test_all_handlers.py::test_error_handling_invalid_callback SKIPPED [ 93%]
+tests/test_all_handlers.py::test_context_data_handling SKIPPED (asyn...) [100%]
+
+=============================== warnings summary ===============================
+../../.local/lib/python3.12/site-packages/pydub/utils.py:14
+  /home/ubuntu/.local/lib/python3.12/site-packages/pydub/utils.py:14: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+tests/test_all_handlers.py:55
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:55: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:71
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:71: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:90
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:90: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:106
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:106: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:117
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:117: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:139
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:139: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:154
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:154: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:170
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:170: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:200
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:200: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:224
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:224: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:255
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:255: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:272
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:272: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:291
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:291: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:314
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:314: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py:328
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_all_handlers.py:328: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_all_handlers.py: 15 warnings
+  /usr/lib/python3/dist-packages/_pytest/python.py:183: PytestUnhandledCoroutineWarning: async def functions are not natively supported and have been skipped.
+  You need to install a suitable plugin for your async framework, for example:
+    - anyio
+    - pytest-asyncio
+    - pytest-tornasync
+    - pytest-trio
+    - pytest-twisted
+    warnings.warn(PytestUnhandledCoroutineWarning(msg.format(nodeid)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 15 skipped, 31 warnings in 0.37s =======================

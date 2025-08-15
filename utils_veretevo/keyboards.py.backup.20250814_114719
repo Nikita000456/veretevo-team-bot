@@ -1,0 +1,58 @@
+import logging
+from telegram import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
+from config_veretevo.constants import GENERAL_DIRECTOR_ID
+from typing import Any, Dict, Optional
+
+def main_menu_keyboard(chat_type: str = "private", user_id: int = None) -> ReplyKeyboardMarkup | None:
+    logging.debug(f"main_menu_keyboard вызван для chat_type={chat_type}, user_id={user_id}")
+    if chat_type != "private":
+        return None
+    buttons = [["📌 Новая задача", "📋 Список задач"], ["Мои задачи"]]
+    # Кнопка 'Помощь' полностью убрана для всех пользователей
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True)
+
+
+def get_task_action_keyboard(task: Dict[str, Any], user_id: Optional[int], department_members: Optional[list] = None) -> InlineKeyboardMarkup:
+    from config_veretevo.constants import GENERAL_DIRECTOR_ID
+    status = task.get('status')
+    author_id = task.get('author_id')
+    assistant_id = task.get('assistant_id')
+    buttons = []
+    # Кнопки не отображаются для завершённых/отменённых задач
+    if status in ['завершено', 'отменено']:
+        return InlineKeyboardMarkup([])
+    
+    # Если user_id не передан (группа) — показываем кнопки по статусу задачи
+    if user_id is None:
+        if status == 'новая':
+            buttons.append(InlineKeyboardButton("Взять в работу", callback_data=f"take_{task.get('id','')}") )
+        if status != 'завершено' and status != 'отменено':
+            buttons.append(InlineKeyboardButton("✅ Завершить", callback_data=f"finish_{task.get('id','')}") )
+        if status != 'завершено' and status != 'отменено':
+            buttons.append(InlineKeyboardButton("❌ Отменить", callback_data=f"cancel_{task.get('id','')}") )
+        return InlineKeyboardMarkup([buttons])
+    
+    # Проверяем права доступа пользователя
+    is_director = user_id == GENERAL_DIRECTOR_ID
+    is_author = user_id == author_id
+    is_assistant = user_id == assistant_id
+    is_department_member = False
+    if department_members is not None:
+        is_department_member = str(user_id) in department_members
+    
+    # "Взять в работу" — если задача новая и пользователь — член отдела или директор
+    if status == 'новая':
+        if is_director or is_department_member:
+            buttons.append(InlineKeyboardButton("Взять в работу", callback_data=f"take_{task.get('id','')}") )
+    
+    # "Завершить" — если задача не завершена/отменена и пользователь — ответственный или директор
+    if status != 'завершено' and status != 'отменено':
+        if is_director or is_assistant:
+            buttons.append(InlineKeyboardButton("✅ Завершить", callback_data=f"finish_{task.get('id','')}") )
+    
+    # "Отменить" — только для автора или директора, если задача не завершена/отменена
+    if status != 'завершено' and status != 'отменено':
+        if is_director or is_author:
+            buttons.append(InlineKeyboardButton("❌ Отменить", callback_data=f"cancel_{task.get('id','')}") )
+    
+    return InlineKeyboardMarkup([buttons])

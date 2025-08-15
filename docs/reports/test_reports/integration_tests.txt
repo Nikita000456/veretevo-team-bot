@@ -1,0 +1,68 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/testbot/VeretevoTeam
+plugins: anyio-4.9.0
+collecting ... collected 5 items
+
+tests/test_handlers_integration.py::test_assign_type_callback_with_assign_none FAILED [ 20%]
+tests/test_handlers_integration.py::test_assign_department_with_assign_none FAILED [ 40%]
+tests/test_handlers_integration.py::test_assign_department_with_invalid_user_id FAILED [ 60%]
+tests/test_handlers_integration.py::test_add_or_update_task_signature PASSED [ 80%]
+tests/test_handlers_integration.py::test_task_creation_flow PASSED       [100%]
+
+=================================== FAILURES ===================================
+__________________ test_assign_type_callback_with_assign_none __________________
+tests/test_handlers_integration.py:56: in test_assign_type_callback_with_assign_none
+    result = asyncio.run(assign_type_callback(update, context))
+/usr/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/usr/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+handlers_veretevo/tasks.py:381: in assign_type_callback
+    return await assign_assistant(update, context)
+handlers_veretevo/tasks.py:518: in assign_assistant
+    await query.answer()
+E   TypeError: object Mock can't be used in 'await' expression
+___________________ test_assign_department_with_assign_none ____________________
+tests/test_handlers_integration.py:83: in test_assign_department_with_assign_none
+    result = asyncio.run(assign_department(update, context))
+/usr/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/usr/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+handlers_veretevo/tasks.py:479: in assign_department
+    await query.message.reply_text(
+E   TypeError: object Mock can't be used in 'await' expression
+_________________ test_assign_department_with_invalid_user_id __________________
+handlers_veretevo/tasks.py:413: in assign_department
+    dep_member = int(data.split("_", 1)[1])
+E   ValueError: invalid literal for int() with base 10: 'invalid_id'
+
+During handling of the above exception, another exception occurred:
+tests/test_handlers_integration.py:109: in test_assign_department_with_invalid_user_id
+    result = asyncio.run(assign_department(update, context))
+/usr/lib/python3.12/asyncio/runners.py:194: in run
+    return runner.run(main)
+/usr/lib/python3.12/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+/usr/lib/python3.12/asyncio/base_events.py:687: in run_until_complete
+    return future.result()
+handlers_veretevo/tasks.py:421: in assign_department
+    await query.message.reply_text("Ошибка: неверный ID сотрудника.")
+E   TypeError: object Mock can't be used in 'await' expression
+=============================== warnings summary ===============================
+../../.local/lib/python3.12/site-packages/pydub/utils.py:14
+  /home/ubuntu/.local/lib/python3.12/site-packages/pydub/utils.py:14: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_handlers_integration.py::test_assign_type_callback_with_assign_none
+FAILED tests/test_handlers_integration.py::test_assign_department_with_assign_none
+FAILED tests/test_handlers_integration.py::test_assign_department_with_invalid_user_id
+==================== 3 failed, 2 passed, 1 warning in 0.75s ====================

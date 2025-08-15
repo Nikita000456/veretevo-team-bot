@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/testbot/VeretevoTeam
+plugins: anyio-4.9.0
+collecting ... collected 2 items
+
+tests/test_task_service.py::test_add_and_get_task PASSED                 [ 50%]
+tests/test_task_service.py::test_task_lifecycle_for_departments PASSED   [100%]
+
+============================== 2 passed in 0.03s ===============================

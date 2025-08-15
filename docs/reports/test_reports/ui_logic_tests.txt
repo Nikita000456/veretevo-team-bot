@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/testbot/VeretevoTeam
+plugins: anyio-4.9.0
+collecting ... collected 2 items
+
+tests/test_task_buttons_algorithm_stable.py::test_task_buttons_algorithm_full SKIPPED [ 50%]
+tests/test_task_buttons_algorithm_stable.py::test_send_task_action_comment PASSED [100%]
+
+=============================== warnings summary ===============================
+tests/test_task_buttons_algorithm_stable.py:22
+  /home/ubuntu/testbot/VeretevoTeam/tests/test_task_buttons_algorithm_stable.py:22: PytestUnknownMarkWarning: Unknown pytest.mark.asyncio - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.asyncio
+
+tests/test_task_buttons_algorithm_stable.py::test_task_buttons_algorithm_full
+  /usr/lib/python3/dist-packages/_pytest/python.py:183: PytestUnhandledCoroutineWarning: async def functions are not natively supported and have been skipped.
+  You need to install a suitable plugin for your async framework, for example:
+    - anyio
+    - pytest-asyncio
+    - pytest-tornasync
+    - pytest-trio
+    - pytest-twisted
+    warnings.warn(PytestUnhandledCoroutineWarning(msg.format(nodeid)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================== 1 passed, 1 skipped, 2 warnings in 1.67s ===================

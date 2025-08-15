@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/testbot/VeretevoTeam
+plugins: anyio-4.9.0
+collecting ... collected 1 item
+
+tests/test_department_service.py::test_get_user_departments PASSED       [100%]
+
+============================== 1 passed in 0.01s ===============================

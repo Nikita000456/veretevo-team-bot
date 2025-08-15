@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.prod
+.env.test
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+test_audio.*
+*.ogg
+*.wav
+*.mp3
+
+# Cache
+.pytest_cache/
+.cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+backups/*.tar.gz
+backups/*.backup
+backups/voice_transcriber_backup_*.py
+backups/*.py
+
+# Data files (если содержат конфиденциальные данные)
+data/tasks.json
+
+# Test files (игнорируем только в корневой папке)
+/test_*.py
+/*_test.py
+simple_*.py
+debug_*.py
+speechkit_*.py
+lpcm_*.py
+ogg_*.py
+mp3_*.py
+wav_*.py docs/reports/TEST_VARIABLES_CLEANUP_REPORT.md

@@ -1,0 +1,25 @@
+[Unit]
+Description=Veretevo Team Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/bots/VeretevoTeam
+ExecStart=/bin/bash /home/ubuntu/bots/VeretevoTeam/scripts/start-bot.sh
+Environment=TODOIST_API_TOKEN=feda9913f9642e19cb35781b687a02a48eca3063
+Environment=TODOIST_PROJECT_ID=2357402180
+Environment=BOT_ENV=prod
+Restart=on-failure
+RestartSec=10
+User=ubuntu
+StandardOutput=journal
+StandardError=journal
+# Настройки для корректного завершения
+TimeoutStartSec=30
+TimeoutStopSec=30
+KillMode=mixed
+KillSignal=SIGTERM
+SendSIGKILL=yes
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,92 @@
+{
+  "assistants": {
+    "name": "Ассистенты",
+    "chat_id": -1002766433811,
+    "members": {
+      "979181458": "Алина Алексеевна",
+      "7705651037": "Veretevo Team",
+      "406325177": "Никита Астапов",
+      "484411013": "Софья Елисеева",
+      "1596376468": "Мария. Помощница",
+      "1119513062": "Наташа (помощница)",
+      "8410813336": "Veretevo Assistant"
+    }
+  },
+  "carpenters": {
+    "name": "Плотники",
+    "chat_id": -1002874667453,
+    "members": {
+      "7705651037": "Veretevo Team",
+      "406325177": "Nikita Astapov",
+      "484411013": "Софья Елисеева",
+      "1596376468": "Мария",
+      "8410813336": "Никита AI Assistant"
+    }
+  },
+  "maintenance": {
+    "name": "Эксплуатация",
+    "chat_id": null,
+    "members": {}
+  },
+  "tech": {
+    "name": "Тех команда",
+    "chat_id": null,
+    "members": {}
+  },
+  "maids": {
+    "name": "Горничные",
+    "chat_id": null,
+    "members": {}
+  },
+  "reception": {
+    "name": "Ресепшен",
+    "chat_id": null,
+    "members": {}
+  },
+  "security": {
+    "name": "Охрана",
+    "chat_id": -1002295933154,
+    "members": {
+      "406325177": "Nikita Astapov",
+      "5229424607": "AI Assistant",
+      "8410813336": "Никита AI Assistant"
+    }
+  },
+  "finance": {
+    "name": "Финансы",
+    "chat_id": -1002844492561,
+    "members": {
+      "7947469699": "Testmain",
+      "406325177": "Никита",
+      "979181458": "Alina Alekseevna",
+      "8410813336": "Никита AI Assistant"
+    }
+  },
+  "construction": {
+    "name": "Стройка",
+    "chat_id": -1002634456712,
+    "members": {
+      "7705651037": "Veretevo Team",
+      "406325177": "Nikita Astapov",
+      "8410813336": "Никита AI Assistant"
+    }
+  },
+  "management": {
+    "name": "Руководители",
+    "chat_id": -1002588088668,
+    "members": {
+      "7705651037": "Veretevo Team",
+      "406325177": "Nikita Astapov",
+      "8410813336": "Никита AI Assistant"
+    }
+  },
+  "info": {
+    "name": "Инфо",
+    "chat_id": -4883128031,
+    "members": {
+      "7705651037": "Veretevo Team",
+      "406325177": "Nikita Astapov",
+      "8410813336": "Никита AI Assistant"
+    }
+  }
+}
