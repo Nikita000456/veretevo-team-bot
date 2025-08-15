@@ -7,7 +7,7 @@ def main_menu_keyboard(chat_type: str = "private", user_id: Optional[int] = None
     logging.debug(f"main_menu_keyboard вызван для chat_type={chat_type}, user_id={user_id}")
     if chat_type != "private":
         return None
-    buttons = [["📌 Новая задача", "📋 Список задач"], ["Мои задачи"]]
+    buttons = [["📌 Новая задача", "📋 Список задач"], ["Мои задачи", "📞 Контакты"]]
     # Кнопка 'Помощь' полностью убрана для всех пользователей
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
@@ -62,3 +62,46 @@ def get_task_action_keyboard(task: Dict[str, Any], user_id: Optional[int], depar
     
     logging.info(f"🎯 Итоговые кнопки для пользователя {user_id}: {[btn.text for btn in buttons]}")
     return InlineKeyboardMarkup([buttons])
+
+
+def contacts_menu_keyboard() -> InlineKeyboardMarkup:
+    """Клавиатура для меню контактов"""
+    buttons = [
+        [InlineKeyboardButton("🔍 Найти контакт", callback_data="contacts_find")],
+        [InlineKeyboardButton("➕ Добавить контакт", callback_data="contacts_add")],
+        [InlineKeyboardButton("📋 Все контакты", callback_data="contacts_list")],
+        [InlineKeyboardButton("🏷️ По категориям", callback_data="contacts_categories")],
+        [InlineKeyboardButton("📤 Экспорт", callback_data="contacts_export")],
+        [InlineKeyboardButton("🔙 Главное меню", callback_data="contacts_main_menu")]
+    ]
+    return InlineKeyboardMarkup(buttons)
+
+
+def contact_categories_keyboard() -> InlineKeyboardMarkup:
+    """Клавиатура для выбора категории контактов"""
+    buttons = [
+        [InlineKeyboardButton("🏭 Поставщики", callback_data="category_supplier")],
+        [InlineKeyboardButton("🏗️ Подрядчики", callback_data="category_contractor")],
+        [InlineKeyboardButton("👥 Сотрудники", callback_data="category_employee")],
+        [InlineKeyboardButton("🔙 Назад", callback_data="contacts_menu")]
+    ]
+    return InlineKeyboardMarkup(buttons)
+
+
+def contact_actions_keyboard(contact_id: str) -> InlineKeyboardMarkup:
+    """Клавиатура действий с конкретным контактом"""
+    buttons = [
+        [InlineKeyboardButton("✏️ Редактировать", callback_data=f"contact_edit_{contact_id}")],
+        [InlineKeyboardButton("🗑️ Удалить", callback_data=f"contact_delete_{contact_id}")],
+        [InlineKeyboardButton("🔍 Подробнее", callback_data=f"contact_details_{contact_id}")],
+        [InlineKeyboardButton("🔙 Назад", callback_data="contacts_list")]
+    ]
+    return InlineKeyboardMarkup(buttons)
+
+
+def contact_creation_keyboard() -> InlineKeyboardMarkup:
+    """Клавиатура для создания контакта с кнопкой отмены"""
+    buttons = [
+        [InlineKeyboardButton("❌ Отмена", callback_data="contact_cancel")]
+    ]
+    return InlineKeyboardMarkup(buttons)

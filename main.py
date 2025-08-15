@@ -13,6 +13,7 @@ from handlers_veretevo.tasks import register_task_handlers
 from handlers_veretevo.reports import register_report_handlers, send_morning_report, send_evening_report
 from handlers_veretevo.gpt_handlers import register_gpt_handlers
 from handlers_veretevo.voice_handler import register_voice_handlers
+from handlers_veretevo.contacts import register_contacts_handlers
 from services_veretevo.department_service import load_departments, DEPARTMENTS
 import requests
 from config_veretevo.constants import GENERAL_DIRECTOR_ID
@@ -198,6 +199,7 @@ def main():
     register_task_handlers(application)
     register_report_handlers(application)
     register_voice_handlers(application)  # Голосовые сообщения для всех чатов
+    register_contacts_handlers(application)  # Обработчики команд по контактам
 
     # Настройка планировщика отчетов
     print("Настройка планировщика отчетов...")
