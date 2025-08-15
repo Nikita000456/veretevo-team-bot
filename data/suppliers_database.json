@@ -1,0 +1,32 @@
+{
+  "+7 (903) 554-87-09": {
+    "name": "Жерганов",
+    "phone": "+7 (903) 554-87-09",
+    "email": "",
+    "address": "",
+    "website": "",
+    "description": "",
+    "type": "supplier",
+    "category": "supplier",
+    "tags": [],
+    "first_added": "2025-08-15T15:57:05.312291",
+    "last_updated": "2025-08-15T15:59:19.131969",
+    "update_count": 2,
+    "internet_enriched": false
+  },
+  "8 (496) 217-33-33": {
+    "name": "Орион металл",
+    "phone": "8 (496) 217-33-33",
+    "email": "",
+    "address": "",
+    "website": "",
+    "description": "",
+    "type": "supplier",
+    "category": "supplier",
+    "tags": [],
+    "first_added": "2025-08-15T15:59:19.132257",
+    "last_updated": "2025-08-15T15:59:19.132265",
+    "update_count": 1,
+    "internet_enriched": false
+  }
+}

@@ -42,32 +42,158 @@ ALLOWED_DEPARTMENTS = ['Ассистенты', 'Руководители', 'Ст
     SEARCHING_CONTACT
 ) = range(10)
 
-class MockKnowledgeCollector:
-    """Заглушка для KnowledgeCollector для тестирования"""
+class KnowledgeCollector:
+    """Реальный KnowledgeCollector для работы с контактами"""
     
     def __init__(self):
         self.suppliers_database = {}
         self.suppliers_file = "data/suppliers_database.json"
+        self._load_suppliers_database()
+    
+    def _load_suppliers_database(self):
+        """Загрузка базы поставщиков"""
+        try:
+            if os.path.exists(self.suppliers_file):
+                with open(self.suppliers_file, 'r', encoding='utf-8') as f:
+                    self.suppliers_database = json.load(f)
+                logger.info(f"📞 Загружена база поставщиков: {len(self.suppliers_database)} контактов")
+            else:
+                logger.info("📞 Создана новая база поставщиков")
+        except Exception as e:
+            logger.error(f"❌ Ошибка загрузки базы поставщиков: {e}")
+            self.suppliers_database = {}
+    
+    def _save_suppliers_database(self):
+        """Сохранение базы поставщиков"""
+        try:
+            with open(self.suppliers_file, 'w', encoding='utf-8') as f:
+                json.dump(self.suppliers_database, f, ensure_ascii=False, indent=2)
+            return True
+        except Exception as e:
+            logger.error(f"❌ Ошибка сохранения базы поставщиков: {e}")
+            return False
     
     def save_supplier_contact(self, contact_data):
-        """Заглушка сохранения контакта"""
-        logger.info(f"📞 Мок: Сохранен контакт {contact_data.get('name', 'Unknown')}")
-        return True
+        """Сохранение контакта поставщика"""
+        try:
+            phone = contact_data.get('phone', '').strip()
+            if not phone:
+                return False
+            
+            # Определяем категорию контакта
+            category = contact_data.get('category', 'supplier')
+            if not category:
+                category = 'supplier'
+            
+            # Проверяем, есть ли уже такой контакт
+            if phone in self.suppliers_database:
+                # Обновляем существующий
+                self.suppliers_database[phone].update({
+                    'last_updated': datetime.now().isoformat(),
+                    'update_count': self.suppliers_database[phone].get('update_count', 0) + 1
+                })
+                logger.info(f"📞 Обновлен контакт {category}: {contact_data.get('name', 'Unknown')}")
+            else:
+                # Добавляем новый
+                self.suppliers_database[phone] = {
+                    'name': contact_data.get('name', 'Unknown'),
+                    'phone': phone,
+                    'email': contact_data.get('email', ''),
+                    'address': contact_data.get('address', ''),
+                    'website': contact_data.get('website', ''),
+                    'description': contact_data.get('description', ''),
+                    'type': contact_data.get('type', 'supplier'),
+                    'category': category,
+                    'tags': contact_data.get('tags', []),
+                    'first_added': datetime.now().isoformat(),
+                    'last_updated': datetime.now().isoformat(),
+                    'update_count': 1,
+                    'internet_enriched': contact_data.get('internet_enriched', 'false')
+                }
+                logger.info(f"📞 Добавлен новый контакт {category}: {contact_data.get('name', 'Unknown')}")
+            
+            # Сохраняем базу поставщиков
+            return self._save_suppliers_database()
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка сохранения контакта поставщика: {e}")
+            return False
     
     def get_contacts_by_category(self, category):
-        """Заглушка получения контактов по категории"""
-        return []
+        """Получение контактов по категории"""
+        try:
+            contacts = []
+            for phone, data in self.suppliers_database.items():
+                if data.get('category') == category:
+                    contacts.append({
+                        'name': data.get('name', 'Unknown'),
+                        'phone': phone,
+                        'email': data.get('email', ''),
+                        'address': data.get('address', ''),
+                        'website': data.get('website', ''),
+                        'description': data.get('description', ''),
+                        'category': data.get('category', 'supplier')
+                    })
+            return contacts
+        except Exception as e:
+            logger.error(f"❌ Ошибка получения контактов по категории: {e}")
+            return []
     
     def search_contacts_advanced(self, query):
-        """Заглушка поиска контактов"""
-        return []
+        """Поиск контактов по ключевому слову"""
+        try:
+            query_lower = query.lower()
+            matching_contacts = []
+            
+            for phone, data in self.suppliers_database.items():
+                name = data.get('name', '').lower()
+                phone_str = phone.lower()
+                description = data.get('description', '').lower()
+                
+                if (query_lower in name or 
+                    query_lower in phone_str or
+                    query_lower in description):
+                    matching_contacts.append({
+                        'name': data.get('name', 'Unknown'),
+                        'phone': phone,
+                        'email': data.get('email', ''),
+                        'address': data.get('address', ''),
+                        'website': data.get('website', ''),
+                        'description': data.get('description', ''),
+                        'category': data.get('category', 'supplier')
+                    })
+            
+            return matching_contacts
+            
+        except Exception as e:
+            logger.error(f"❌ Ошибка поиска контактов: {e}")
+            return []
+    
+    def get_all_contacts(self):
+        """Получение всех контактов"""
+        try:
+            contacts = []
+            for phone, data in self.suppliers_database.items():
+                contacts.append({
+                    'name': data.get('name', 'Unknown'),
+                    'phone': phone,
+                    'email': data.get('email', ''),
+                    'address': data.get('address', ''),
+                    'website': data.get('website', ''),
+                    'description': data.get('description', ''),
+                    'category': data.get('category', 'supplier')
+                })
+            return contacts
+        except Exception as e:
+            logger.error(f"❌ Ошибка получения всех контактов: {e}")
+            return []
 
 class ContactsHandler:
     """Обработчик команд по контактам"""
     
     def __init__(self):
         # Используем заглушку вместо реального KnowledgeCollector
-        self.knowledge_collector = MockKnowledgeCollector()
+        self.knowledge_collector = KnowledgeCollector()
         self.veretevo_info_chat_id = None
     
     async def _safe_edit_message(self, query, text, reply_markup=None, parse_mode=None, fallback_message=""):
@@ -287,37 +413,127 @@ class ContactsHandler:
     
     async def _handle_list_contacts(self, query, context):
         """Обработка списка всех контактов"""
-        await self._safe_edit_message(
-            query,
-            "📋 <b>СПИСОК КОНТАКТОВ</b>\n\n"
-            "ℹ️ В базе пока нет контактов.\n"
-            "Добавьте первый контакт!",
-            reply_markup=contacts_menu_keyboard(),
-            parse_mode=ParseMode.HTML,
-            fallback_message="Список контактов уже отображается"
-        )
+        try:
+            # Получаем все контакты
+            all_contacts = self.knowledge_collector.get_all_contacts()
+            
+            if all_contacts:
+                # Формируем список контактов
+                contacts_text = "📋 <b>СПИСОК ВСЕХ КОНТАКТОВ</b>\n\n"
+                
+                for i, contact in enumerate(all_contacts, 1):
+                    contacts_text += f"{i}. <b>{contact['name']}</b>\n"
+                    contacts_text += f"   📱 {contact['phone']}\n"
+                    if contact.get('email'):
+                        contacts_text += f"   📧 {contact['email']}\n"
+                    if contact.get('address'):
+                        contacts_text += f"   📍 {contact['address']}\n"
+                    if contact.get('website'):
+                        contacts_text += f"   🌐 {contact['website']}\n"
+                    if contact.get('description'):
+                        contacts_text += f"   📝 {contact['description']}\n"
+                    contacts_text += f"   🏷️ {contact['category']}\n\n"
+                
+                # Ограничиваем длину сообщения
+                if len(contacts_text) > 4000:
+                    contacts_text = contacts_text[:4000] + "\n\n... (показаны первые контакты)"
+                
+                await self._safe_edit_message(
+                    query,
+                    contacts_text,
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message="Список контактов уже отображается"
+                )
+            else:
+                await self._safe_edit_message(
+                    query,
+                    "📋 <b>СПИСОК КОНТАКТОВ</b>\n\n"
+                    "ℹ️ В базе пока нет контактов.\n"
+                    "Добавьте первый контакт!",
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message="Список контактов уже отображается"
+                )
+        except Exception as e:
+            logger.error(f"❌ Ошибка при показе списка контактов: {e}")
+            await self._safe_edit_message(
+                query,
+                "❌ Произошла ошибка при загрузке списка контактов",
+                reply_markup=contacts_menu_keyboard(),
+                fallback_message="Ошибка загрузки"
+            )
     
     async def _handle_show_categories(self, query, context):
         """Показ категорий контактов"""
-        await self._safe_edit_message(
-            query,
-            "🏷️ <b>КАТЕГОРИИ КОНТАКТОВ</b>\n\n"
-            "Выберите категорию для просмотра контактов:",
-            reply_markup=contact_categories_keyboard(),
-            parse_mode=ParseMode.HTML,
-            fallback_message="Категории уже отображаются"
-        )
+        try:
+            # Получаем контакты по категориям
+            suppliers = self.knowledge_collector.get_contacts_by_category('supplier')
+            contractors = self.knowledge_collector.get_contacts_by_category('contractor')
+            employees = self.knowledge_collector.get_contacts_by_category('employee')
+            
+            categories_text = "🏷️ <b>КАТЕГОРИИ КОНТАКТОВ</b>\n\n"
+            categories_text += f"🏭 <b>Поставщики:</b> {len(suppliers)} контактов\n"
+            categories_text += f"🏗️ <b>Подрядчики:</b> {len(contractors)} контактов\n"
+            categories_text += f"👥 <b>Сотрудники:</b> {len(employees)} контактов\n\n"
+            categories_text += "Выберите категорию для просмотра контактов:"
+            
+            await self._safe_edit_message(
+                query,
+                categories_text,
+                reply_markup=contact_categories_keyboard(),
+                parse_mode=ParseMode.HTML,
+                fallback_message="Категории уже отображаются"
+            )
+        except Exception as e:
+            logger.error(f"❌ Ошибка при показе категорий: {e}")
+            await self._safe_edit_message(
+                query,
+                "❌ Произошла ошибка при загрузке категорий",
+                reply_markup=contact_categories_keyboard(),
+                fallback_message="Ошибка загрузки"
+            )
     
     async def _handle_export_contacts(self, query, context):
         """Экспорт контактов"""
-        await self._safe_edit_message(
-            query,
-            "📤 <b>ЭКСПОРТ КОНТАКТОВ</b>\n\n"
-            "ℹ️ В базе нет контактов для экспорта.",
-            reply_markup=contacts_menu_keyboard(),
-            parse_mode=ParseMode.HTML,
-            fallback_message="Экспорт контактов уже отображается"
-        )
+        try:
+            all_contacts = self.knowledge_collector.get_all_contacts()
+            
+            if all_contacts:
+                export_text = "📤 <b>ЭКСПОРТ КОНТАКТОВ</b>\n\n"
+                export_text += f"Всего контактов: {len(all_contacts)}\n\n"
+                
+                for contact in all_contacts:
+                    export_text += f"• {contact['name']} - {contact['phone']}\n"
+                
+                # Ограничиваем длину сообщения
+                if len(export_text) > 4000:
+                    export_text = export_text[:4000] + "\n\n... (показаны первые контакты)"
+                
+                await self._safe_edit_message(
+                    query,
+                    export_text,
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message="Экспорт контактов уже отображается"
+                )
+            else:
+                await self._safe_edit_message(
+                    query,
+                    "📤 <b>ЭКСПОРТ КОНТАКТОВ</b>\n\n"
+                    "ℹ️ В базе нет контактов для экспорта.",
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message="Экспорт контактов уже отображается"
+                )
+        except Exception as e:
+            logger.error(f"❌ Ошибка при экспорте контактов: {e}")
+            await self._safe_edit_message(
+                query,
+                "❌ Произошла ошибка при экспорте контактов",
+                reply_markup=contacts_menu_keyboard(),
+                fallback_message="Ошибка экспорта"
+            )
     
     async def _handle_main_menu(self, query, context):
         """Возврат в главное меню"""
@@ -330,21 +546,61 @@ class ContactsHandler:
     
     async def _handle_category_selection(self, query, context, callback_data):
         """Обработка выбора категории"""
-        category = callback_data.replace("category_", "")
-        category_names = {
-            'supplier': 'Поставщики',
-            'contractor': 'Подрядчики', 
-            'employee': 'Сотрудники'
-        }
-        
-        await self._safe_edit_message(
-            query,
-            f"🏷️ <b>КАТЕГОРИЯ: {category_names.get(category, category)}</b>\n\n"
-            f"ℹ️ В этой категории пока нет контактов.",
-            reply_markup=contact_categories_keyboard(),
-            parse_mode=ParseMode.HTML,
-            fallback_message=f"Категория {category_names.get(category, category)} уже отображается"
-        )
+        try:
+            category = callback_data.replace("category_", "")
+            category_names = {
+                'supplier': 'Поставщики',
+                'contractor': 'Подрядчики', 
+                'employee': 'Сотрудники'
+            }
+            
+            # Получаем контакты по выбранной категории
+            contacts = self.knowledge_collector.get_contacts_by_category(category)
+            
+            if contacts:
+                category_text = f"🏷️ <b>КАТЕГОРИЯ: {category_names.get(category, category)}</b>\n\n"
+                category_text += f"Найдено контактов: {len(contacts)}\n\n"
+                
+                for i, contact in enumerate(contacts[:10], 1):  # Показываем первые 10
+                    category_text += f"{i}. <b>{contact['name']}</b>\n"
+                    category_text += f"   📱 {contact['phone']}\n"
+                    if contact.get('email'):
+                        category_text += f"   📧 {contact['email']}\n"
+                    if contact.get('description'):
+                        category_text += f"   📝 {contact['description']}\n"
+                    category_text += "\n"
+                
+                if len(contacts) > 10:
+                    category_text += f"... и еще {len(contacts) - 10} контактов"
+                
+                # Ограничиваем длину сообщения
+                if len(category_text) > 4000:
+                    category_text = category_text[:4000] + "\n\n... (показаны первые контакты)"
+                
+                await self._safe_edit_message(
+                    query,
+                    category_text,
+                    reply_markup=contact_categories_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message=f"Категория {category_names.get(category, category)} уже отображается"
+                )
+            else:
+                await self._safe_edit_message(
+                    query,
+                    f"🏷️ <b>КАТЕГОРИЯ: {category_names.get(category, category)}</b>\n\n"
+                    f"ℹ️ В этой категории пока нет контактов.",
+                    reply_markup=contact_categories_keyboard(),
+                    parse_mode=ParseMode.HTML,
+                    fallback_message=f"Категория {category_names.get(category, category)} уже отображается"
+                )
+        except Exception as e:
+            logger.error(f"❌ Ошибка при выборе категории: {e}")
+            await self._safe_edit_message(
+                query,
+                "❌ Произошла ошибка при загрузке категории",
+                reply_markup=contact_categories_keyboard(),
+                fallback_message="Произошла ошибка"
+            )
     
     # Добавляем недостающие методы для ConversationHandler
     async def handle_contact_name_input(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -565,22 +821,40 @@ class ContactsHandler:
             
             if results:
                 # Показываем результаты
-                result_text = f"🔍 Результаты поиска по запросу '{query_text}':\n\n"
+                result_text = f"🔍 <b>Результаты поиска по запросу '{query_text}':</b>\n\n"
+                
                 for i, contact in enumerate(results[:10], 1):
-                    result_text += f"{i}. {contact.get('name', 'N/A')}\n"
+                    result_text += f"{i}. <b>{contact.get('name', 'N/A')}</b>\n"
                     result_text += f"   📱 {contact.get('phone', 'N/A')}\n"
-                    result_text += f"   📧 {contact.get('email', 'N/A')}\n"
+                    if contact.get('email'):
+                        result_text += f"   📧 {contact.get('email', 'N/A')}\n"
+                    if contact.get('address'):
+                        result_text += f"   📍 {contact.get('address', 'N/A')}\n"
+                    if contact.get('website'):
+                        result_text += f"   🌐 {contact.get('website', 'N/A')}\n"
+                    if contact.get('description'):
+                        result_text += f"   📝 {contact.get('description', 'N/A')}\n"
                     result_text += f"   🏷️ {contact.get('category', 'N/A')}\n\n"
+                
+                # Ограничиваем длину сообщения
+                if len(result_text) > 4000:
+                    result_text = result_text[:4000] + "\n\n... (показаны первые результаты)"
                 
                 await update.message.reply_text(
                     result_text,
-                    reply_markup=contacts_menu_keyboard()
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 await update.message.reply_text(
-                    f"🔍 По запросу '{query_text}' ничего не найдено.\n\n"
-                    f"💡 Попробуйте изменить поисковый запрос или добавить новый контакт.",
-                    reply_markup=contacts_menu_keyboard()
+                    f"🔍 <b>Поиск по запросу '{query_text}'</b>\n\n"
+                    f"ℹ️ Ничего не найдено.\n\n"
+                    f"💡 Попробуйте:\n"
+                    f"   • Изменить поисковый запрос\n"
+                    f"   • Использовать часть имени или телефона\n"
+                    f"   • Добавить новый контакт",
+                    reply_markup=contacts_menu_keyboard(),
+                    parse_mode=ParseMode.HTML
                 )
             
             return ConversationHandler.END
